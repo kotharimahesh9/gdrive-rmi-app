@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  # Part 1: File Server with Manual Operations
+  part1-server:
+    build: .
+    container_name: gdrive-part1-server
+    hostname: part1-server
+    environment:
+      - JAVA_RMI_SERVER_HOSTNAME=part1-server
+    command: ["part1", "server"]
+    ports:
+      - "1099:1099"
+    volumes:
+      - part1-uploads:/app/Part1/server_uploads
+    networks:
+      - gdrive-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "1099"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  part1-client:
+    build: .
+    container_name: gdrive-part1-client
+    hostname: part1-client
+    command: ["part1", "client", "part1-server"]
+    depends_on:
+      part1-server:
+        condition: service_healthy
+    volumes:
+      - part1-client-files:/app/Part1/clientFiles
+    networks:
+      - gdrive-network
+    stdin_open: true
+    tty: true
+
+  # Part 2: File Synchronization System
+  part2-server:
+    build: .
+    container_name: gdrive-part2-server
+    hostname: part2-server
+    environment:
+      - JAVA_RMI_SERVER_HOSTNAME=part2-server
+    command: ["part2", "server"]
+    ports:
+      - "1100:1099"
+    volumes:
+      - part2-uploads:/app/Part2/server_uploads
+    networks:
+      - gdrive-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "1099"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  part2-client:
+    build: .
+    container_name: gdrive-part2-client
+    hostname: part2-client
+    command: ["part2", "client", "part2-server"]
+    depends_on:
+      part2-server:
+        condition: service_healthy
+    volumes:
+      - part2-client-sync:/app/Part2/client_sync
+    networks:
+      - gdrive-network
+    stdin_open: true
+    tty: true
+
+  # Part 3: Computation Server
+  part3-server:
+    build: .
+    container_name: gdrive-part3-server
+    hostname: part3-server
+    environment:
+      - JAVA_RMI_SERVER_HOSTNAME=part3-server
+    command: ["part3", "server"]
+    ports:
+      - "1101:1099"
+    networks:
+      - gdrive-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "1099"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  part3-client:
+    build: .
+    container_name: gdrive-part3-client
+    hostname: part3-client
+    command: ["part3", "client", "part3-server"]
+    depends_on:
+      part3-server:
+        condition: service_healthy
+    networks:
+      - gdrive-network
+    stdin_open: true
+    tty: true
+
+networks:
+  gdrive-network:
+    driver: bridge
+
+volumes:
+  part1-uploads:
+    driver: local
+  part1-client-files:
+    driver: local
+  part2-uploads:
+    driver: local
+  part2-client-sync:
+    driver: local

@@ -1,0 +1,48 @@
+# IDE files
+.idea/
+*.iml
+.vscode/
+.vs/
+
+# Claude Code
+.claude/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (except project report)
+*.md
+!README-Docker.md
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Build artifacts
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Large binaries (keep only necessary test files)
+*.exe
+*.dll
+*.so
+*.dylib
