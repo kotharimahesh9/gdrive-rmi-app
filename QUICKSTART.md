@@ -299,17 +299,3 @@ docker-compose down -v
 # Complete cleanup (removes images too)
 docker-compose down -v --rmi all
 ```
-
-## Next Steps
-
-1. Test each part individually
-2. Monitor logs to understand the flow
-3. Try uploading different files
-4. Experiment with the computation features
-5. Check how auto-sync works in Part 2
-
-## Support
-
-For detailed information, see [README-Docker.md](README-Docker.md)
-
-Happy containerizing! 🐳
