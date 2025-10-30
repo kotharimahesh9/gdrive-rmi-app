@@ -30,13 +30,14 @@ COPY --from=build /app/Part1/*.class ./Part1/
 COPY --from=build /app/Part2/*.class ./Part2/
 COPY --from=build /app/Part3/*.class ./Part3/
 
-# Copy client files and server uploads directories
-COPY Part1/clientFiles/ ./Part1/clientFiles/
-COPY Part1/server_uploads/ ./Part1/server_uploads/
-
-# Create necessary directories for other parts
-RUN mkdir -p Part2/server_uploads Part2/client_sync \
+# Create necessary directories first
+RUN mkdir -p Part1/server_uploads Part1/clientFiles \
+    Part2/server_uploads Part2/client_sync \
     Part3/data
+
+# Copy client files and handle empty directories gracefully
+COPY --chown=root:root Part1/clientFiles ./Part1/clientFiles/
+COPY --chown=root:root Part1/server_uploads ./Part1/server_uploads/
 
 # Copy launcher script and fix line endings
 COPY launcher.sh /app/launcher.sh
