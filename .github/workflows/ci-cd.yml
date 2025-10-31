@@ -150,6 +150,9 @@ jobs:
     name: Security Scan
     needs: build-and-test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout code
